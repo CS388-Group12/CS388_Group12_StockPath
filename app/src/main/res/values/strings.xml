@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">CS388_Group12_StockPath</string>
+    <string name="app_name">StockPath</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_news">News</string>
+    <string name="title_alerts">Alerts</string>
+    <string name="title_charts">Charts</string>
+
 </resources>
