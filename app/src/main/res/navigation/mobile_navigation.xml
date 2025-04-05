@@ -5,6 +5,12 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
+
+    <fragment
+        android:id="@+id/navigation_charts"
+        android:name="com.example.cs388_group12_stockpath.ui.charts.ChartsFragment"
+        android:label="@string/title_charts"
+        tools:layout="@layout/fragment_charts" />
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cs388_group12_stockpath.ui.home.HomeFragment"
@@ -12,14 +18,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.cs388_group12_stockpath.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_news"
+        android:name="com.example.cs388_group12_stockpath.ui.news.NewsFragment"
+        android:label="@string/title_news"
+        tools:layout="@layout/fragment_news" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.cs388_group12_stockpath.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_alerts"
+        android:name="com.example.cs388_group12_stockpath.ui.alerts.AlertsFragment"
+        android:label="@string/title_alerts"
+        tools:layout="@layout/fragment_alerts" />
 </navigation>
