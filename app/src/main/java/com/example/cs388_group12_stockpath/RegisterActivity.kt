@@ -17,6 +17,13 @@ class RegisterActivity : AppCompatActivity() {
 
         // Get Authentication instance
         val auth = FirebaseAuth.getInstance()
+
+        //Check if persistant user logged in then close/go home
+        if (auth.currentUser != null) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
         // retrieve username and password
         val editTextEmailAddress: EditText = findViewById(R.id.editTextTextEmailAddress)
         val editTextPassword: EditText = findViewById(R.id.editTextTextPassword)
