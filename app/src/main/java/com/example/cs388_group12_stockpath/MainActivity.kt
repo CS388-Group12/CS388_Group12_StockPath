@@ -39,19 +39,17 @@ class MainActivity : AppCompatActivity() {
 
         val userEmailText: TextView = findViewById(R.id.user_email_text)
         val authButton: Button = findViewById(R.id.auth_button)
-        val secondaryToolbar: Toolbar = findViewById(R.id.secondary_toolbar)
-
         globalUserView.uid.observe(this) { uid ->
             globalUserView.email.observe(this) { email ->
                 if (uid == "Guest") {
-                    userEmailText.text = "Hi: Guest@StockPath"
+                    userEmailText.text = "Welcome: Guest"
                     authButton.text = "Sign In"
                     authButton.setOnClickListener {
                         val intent = Intent(this, RegisterActivity::class.java)
                         startActivity(intent)
                     }
                 } else {
-                    userEmailText.text = "Hi: $email"
+                    userEmailText.text = "Welcome: $email"
                     authButton.text = "Sign Out"
                     authButton.setOnClickListener {
                         FirebaseAuth.getInstance().signOut()
@@ -93,11 +91,11 @@ class MainActivity : AppCompatActivity() {
             Log.d("Navigation", "Navigated to ${destination.label}")
             when (destination.id) {
                 R.id.navigation_home, R.id.navigation_charts, R.id.navigation_news, R.id.navigation_alerts -> {
-                    secondaryToolbar.visibility = View.VISIBLE
+                    toolbar.visibility = View.VISIBLE
                 }
                 else -> {
-                    //secondaryToolbar.visibility = View.GONE
-                    secondaryToolbar.visibility = View.VISIBLE
+                    //toolbar.visibility = View.GONE
+                    toolbar.visibility = View.VISIBLE
                 }
             }
         }
