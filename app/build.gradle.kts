@@ -1,3 +1,5 @@
+
+import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -16,6 +18,25 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val props = Properties()
+        val locprops = rootProject.file("local.properties")
+        if (locprops.exists()) {
+            props.load(locprops.inputStream()) //loading local propertites into global properties
+        }else {
+            logger.warn("local.properties not found")
+            //e.printStackTrace()
+        }
+        val apikey = props.getProperty("API_KEY") ?: "none"
+        if (apikey == "none") {
+            logger.warn("API_KEY not found")
+            //throw Error("API_KEY not found")
+        }
+        buildConfigField("String", "API_KEY", apikey) //must be a non null string
+        logger.info("success AV API_KEY: " + apikey)
+
+
+
     }
 
     buildTypes {
@@ -36,6 +57,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
