@@ -30,12 +30,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        globalUserView.uid.observe(this) {
-            Log.d("MainActivity", "User ID: $it")
-        }
-        globalUserView.email.observe(this) {
-            Log.d("MainActivity", "Email: $it")
-        }
+//        globalUserView.uid.observe(this) {
+//            Log.d("MainActivity", "User ID: $it")
+//        }
+//        globalUserView.email.observe(this) {
+//            Log.d("MainActivity", "Email: $it")
+//        }
 
         val userEmailText: TextView = findViewById(R.id.user_email_text)
         val authButton: Button = findViewById(R.id.auth_button)
@@ -75,14 +75,7 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-//        val textTitle=TextView(this).apply {
-//            text="StockPath"
-//            textSize=20F
-//            setTextColor(Color.WHITE)
 //
-//        }
-//        val args= Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT,Toolbar.LayoutParams.WRAP_CONTENT, Gravity.START)
-//        toolbar.addView(textTitle,args)
         navView.setupWithNavController(navController)
         val fragmentLabel: TextView = findViewById(R.id.fragment_label)
         navController.addOnDestinationChangedListener { _, destination, _ ->
