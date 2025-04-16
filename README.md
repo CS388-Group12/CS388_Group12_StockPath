@@ -146,20 +146,22 @@ StockPath, the stock portfolio management tool is ourtop app idea because it wou
 # Milestone 2 - Build Sprint 1 (Unit 8)
 
 ## GitHub Project board
-
-[Add screenshot of your Project Board with three milestones visible in
-this section]
-<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+<img src="https://github.com/user-attachments/assets/9de0a7b1-d91f-49a2-b610-e547cb5555b2" width=600>
 
 ## Issue cards
 
-- [Add screenshot of your Project Board with the issues that you've been working on for this unit's milestone] <img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
-- [Add screenshot of your Project Board with the issues that you're working on in the **NEXT sprint**. It should include issues for next unit with assigned owners.] <img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+
+- [Add screenshot of your Project Board with the issues that you've been working on for this unit's milestone] <img src="https://github.com/user-attachments/assets/4a160c9a-d5b2-4346-adb2-1139e64d07d9" width=600>
+- [Add screenshot of your Project Board with the issues that you're working on in the **NEXT sprint**. It should include issues for next unit with assigned owners.] <img src="https://github.com/user-attachments/assets/fc6377d8-8bc4-4358-9960-14d3135dc4a4" width=600>
 
 ## Issues worked on this sprint
 
 - List the issues you completed this sprint
-- [Add giphy that shows current build progress for Milestone 2. Note: We will be looking for progression of work between Milestone 2 and 3. Make sure your giphys are not duplicated and clearly show the change from Sprint 1 to 2.]
+- User can Register
+- User can Login
+- User can view assets on home screen
+- UI layout
+![m2](https://github.com/user-attachments/assets/cc719031-7ae9-4ec2-af51-f0a1b4c7d9be)
 
 <br>
 
@@ -167,17 +169,30 @@ this section]
 
 ## GitHub Project board
 
-[Add screenshot of your Project Board with the updated status of issues for Milestone 3. Note that these should include the updated issues you worked on for this sprint and not be a duplicate of Milestone 2 Project board.] <img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+[Add screenshot of your Project Board with the updated status of issues for Milestone 3. Note that these should include the updated issues you worked on for this sprint and not be a duplicate of Milestone 2 Project board.] <img src="https://github.com/user-attachments/assets/f8357d06-a51d-4c34-b083-e9f9eb882e71" width=600>
+<img width="796" alt="Screenshot 2025-04-16 at 2 38 14 AM" src="https://github.com/user-attachments/assets/3e581ec3-7f0f-49db-ab88-3500f493e5a4" />
 
 ## Completed user stories
 
-- List the completed user stories from this unit
-- List any pending user stories / any user stories you decided to cut
+- User can view Assets in portfolio on home screen
+- User can Add orders to portfolio
+- User can click on Asset and view orders associated
+- User can set alerts for Assets
+- Users can retrieve price data for current market value
+  
+## List any pending user stories / any user stories you decided to cut
 from the original requirements
+In the next spring we will:
+- Implement the Chart api to display the financial data for each Asset
+- Incorporate the gyroscope sensor for viewing charts at different intervals and zooms.
+- Integrate Google Gemini to summarize and provide relevant news articles for the users Portfolio.
+- Notifications and Alerts are pushed to device
+
 
 [Add video/gif of your current application that shows build progress]
-<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+<img src="https://github.com/user-attachments/assets/4224579a-7849-4d8d-a553-0dd7708735b3" width=600>
 
 ## App Demo Video
 
 - Embed the YouTube/Vimeo link of your Completed Demo Day prep video
+- 
