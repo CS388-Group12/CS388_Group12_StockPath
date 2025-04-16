@@ -1,10 +1,8 @@
 package com.example.cs388_group12_stockpath
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -37,24 +35,23 @@ class MainActivity : AppCompatActivity() {
 //            Log.d("MainActivity", "Email: $it")
 //        }
 
-        val userEmailText: TextView = findViewById(R.id.user_email_text)
-        val authButton: Button = findViewById(R.id.auth_button)
-        globalUserView.uid.observe(this) { uid ->
-            globalUserView.email.observe(this) { email ->
-                if (uid == "Guest") {
-                    userEmailText.text = "Welcome: Guest"
-                    authButton.text = "Sign In"
-                    authButton.setOnClickListener {
-                        val intent = Intent(this, RegisterActivity::class.java)
-                        startActivity(intent)
-                    }
-                } else {
-                    userEmailText.text = "Welcome: $email"
-                    authButton.text = "Sign Out"
-                    authButton.setOnClickListener {
-                        FirebaseAuth.getInstance().signOut()
-                        globalUserView.refreshUser()
-                    }
+        val user_email_text: TextView = findViewById(R.id.user_email_text)
+        val auth_Button: Button = findViewById(R.id.auth_button)
+
+        globalUserView.user.observe(this) { user ->
+            if (user != null) {
+                user_email_text.text = "Welcome: ${user.email}"
+                auth_Button.text = "Sign Out"
+                auth_Button.setOnClickListener {
+                    FirebaseAuth.getInstance().signOut()
+                    globalUserView.refreshUser()
+                }
+            } else {
+                user_email_text.text = "Welcome: Guest"
+                auth_Button.text = "Sign In"
+                auth_Button.setOnClickListener {
+                    // Navigate to sign-in activity
+                    startActivity(Intent(this, RegisterActivity::class.java))
                 }
             }
         }

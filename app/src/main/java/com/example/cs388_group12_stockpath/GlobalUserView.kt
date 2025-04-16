@@ -1,14 +1,12 @@
 package com.example.cs388_group12_stockpath
-import com.example.cs388_group12_stockpath.Order
-import com.example.cs388_group12_stockpath.Asset
-import com.example.cs388_group12_stockpath.StockFuncs
+
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 class GlobalUserView : ViewModel() { //global user data model to be persistant and asynchrounous accross app
     private val _user = MutableLiveData<FirebaseUser?>()
@@ -16,9 +14,22 @@ class GlobalUserView : ViewModel() { //global user data model to be persistant a
     private val _uid = MutableLiveData<String?>() //?: "Guest" as MutableLiveData<String?>
     val uid: LiveData<String?> = _uid //?: "Guest" as LiveData<String?>
     private val _email = MutableLiveData<String?>() //?: "Guest@StockPath" as MutableLiveData<String?>
+
     val email: LiveData<String?> = _email //?: "Guest@StockPath" as LiveData<String?>
+
+    //Home Fragment Portfolio
+    private val stockFuncs = StockFuncs()
+    private var _orders = MutableLiveData<MutableList<Order>>(mutableListOf())
+    var orders: LiveData<MutableList<Order>> = _orders
+    private var _assets = MutableLiveData<MutableList<Asset>>(mutableListOf())
+    var assets: LiveData<MutableList<Asset>> = _assets
+
     init {
         getUser()
+        getOrders()
+        _orders.observeForever { orders ->
+        calculateAssetsFromOrders()
+        }
     }
 
     private fun getUser() {
@@ -36,71 +47,113 @@ class GlobalUserView : ViewModel() { //global user data model to be persistant a
         Log.d("GlobalUserView", "Updated user data: uid: ${uid.value}, email: ${email.value}")
     }
 
-    //Home Fragment Portfolio
-    private val stockFuncs = StockFuncs()
-
-    private val _orders = MutableLiveData<MutableList<Order>>(mutableListOf())
-    val orders: LiveData<MutableList<Order>> = _orders
-
-    private val _assets = MutableLiveData<MutableList<Asset>>(mutableListOf())
-    val assets: LiveData<MutableList<Asset>> = _assets
-
-    fun addOrder(order: Order) {
-        // Add the order to the orders list
-        _orders.value?.add(order)
-        _orders.postValue(_orders.value) // Notify observers
-
-        // Update the assets list
-        val existingAsset = _assets.value?.find { it.sym == order.sym }
-        if (existingAsset != null) {
-            // Update the existing asset
-            val totalQuantity = existingAsset.totalQuantity + order.qty
-            val totalValue =
-                (existingAsset.averagePrice * existingAsset.totalQuantity) + (order.price * order.qty)
-            existingAsset.totalQuantity = totalQuantity
-            existingAsset.averagePrice = totalValue / totalQuantity
-        } else {
-            // Add a new asset
-            val newAsset = Asset(
-                sym = order.sym,
-                totalQuantity = order.qty,
-                averagePrice = order.price,
-                currentPrice =0.0,
-                gainloss = 0.0
-            )
-            _assets.value?.add(newAsset)
-        }
-        //getcurrentprice and calculate gain/loss
-        _assets.value?.forEach { asset ->
-            stockFuncs.get_current_price(asset.sym, { currentPrice: Double ->
-                asset.currentPrice = currentPrice
-                asset.gainloss = (currentPrice - asset.averagePrice) * asset.totalQuantity
-                _assets.postValue(_assets.value) // Notify observers
-            }, { error ->
-                Log.e("GlobalUserView", "Error fetching current price for ${asset.sym}: $error")
-            })
-        }
-
-        _assets.postValue(_assets.value) // Notify observers
-
-        // Store the order in Firebase
-        val uid = _uid.value
-        if (uid != null) {
-            val database = FirebaseDatabase.getInstance().getReference("users/$uid/portfolio")
-            database.push().setValue(order)
-                .addOnSuccessListener {
-                    Log.d("GlobalUserView", "Order successfully added to Firebase")
-                }
-                .addOnFailureListener { e ->
-                    Log.e("GlobalUserView", "Failed to add order to Firebase", e)
-                }
-        }
-    }
-
-
     fun refreshUser() {
         getUser()
+        getOrders()
+        _orders.observeForever { orders ->
+        calculateAssetsFromOrders()
+        }
         Log.d("GlobalUserView", "Refreshed user data: uid: ${uid.value}, email: ${email.value}")
     }
 
+    //Orders
+    fun getOrders() {
+    val uid = _uid.value ?: return
+    val db = FirebaseFirestore.getInstance()
+    val ordersRef = db.collection("Users").document(uid).collection("Orders")
+
+//    ordersRef.get()
+//        .addOnSuccessListener { documents ->
+//            val ordersList = mutableListOf<Order>()
+//            for (document in documents) {
+//                val order = document.toObject(Order::class.java)
+//                ordersList.add(order)
+//            }
+//            _orders.value = ordersList
+//            Log.d("GlobalUserView", "Fetched orders: $ordersList")
+//        }
+//        .addOnFailureListener { exception ->
+//            Log.e("GlobalUserView", "Error fetching orders", exception)
+//        }
+    ordersRef.addSnapshotListener { snapshots, e ->
+        if (e != null) {
+            Log.e("GlobalUserView", "Error listening for orders", e)
+            return@addSnapshotListener
+        }
+
+        val ordersList = mutableListOf<Order>()
+        for (document in snapshots!!) {
+            val order = document.toObject(Order::class.java)
+            ordersList.add(order)
+        }
+        _orders.value = ordersList
+        Log.d("GlobalUserView", "Real-time fetched orders: $ordersList")
+    }
 }
+
+fun putOrder(order: Order) {
+    val uid = _uid.value ?: return
+    val db = FirebaseFirestore.getInstance()
+    val userRef = db.collection("Users").document(uid)
+    val ordersRef = userRef.collection("Orders")
+
+    //if uid document exists
+    userRef.get()
+        .addOnSuccessListener { document ->
+            if (!document.exists()) {
+                //create uid document if doesnt exist
+                userRef.set(mapOf("initialized" to true))
+                    .addOnSuccessListener {
+                        Log.d("GlobalUserView", "User document created for uid: $uid")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("GlobalUserView", "Error creating user document", exception)
+                    }
+            }
+
+            //update add to orders collection
+            ordersRef.document(order.oid).set(order)
+                .addOnSuccessListener {
+                    Log.d("GlobalUserView", "Order successfully added: $order")
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("GlobalUserView", "Error adding order", exception)
+                }
+        }
+        .addOnFailureListener { exception ->
+            Log.e("GlobalUserView", "Error checking user document", exception)
+        }
+    }
+
+    //Assets derrived from orders
+    fun calculateAssetsFromOrders() {
+    val ordersList = _orders.value ?: return
+    val assetsMap = mutableMapOf<String, Asset>()
+
+    for (order in ordersList) {
+        val sym = order.sym
+        val asset = assetsMap[sym] ?: Asset(sym, 0.0, 0.0, 0.0, 0.0)
+
+        //update total quantity and average price
+        if (order.type == "Buy") {
+            val totalCost = asset.totalQuantity * asset.averagePrice + order.qty * order.price
+            asset.totalQuantity += order.qty
+            asset.averagePrice = if (asset.totalQuantity > 0) totalCost / asset.totalQuantity else 0.0
+        } else if (order.type == "Sell") {
+            asset.totalQuantity -= order.qty
+            if (asset.totalQuantity < 0) asset.totalQuantity = 0.0 //positive quantities
+        }
+
+        asset.orderCount += 1
+
+        //updated asset back to the map
+        assetsMap[sym] = asset
+    }
+
+    //update asset list
+    _assets.value = assetsMap.values.toMutableList()
+}
+
+
+}
+    

@@ -1,8 +1,7 @@
 package com.example.cs388_group12_stockpath.ui.home
-import com.example.cs388_group12_stockpath.AddOrderActivity
 import com.example.cs388_group12_stockpath.GlobalUserView
 import com.example.cs388_group12_stockpath.R
-import com.example.cs388_group12_stockpath.AssetAdapter
+import com.example.cs388_group12_stockpath.databinding.FragmentHomeBinding
 import android.content.Intent
 import com.example.cs388_group12_stockpath.BuildConfig
 import androidx.recyclerview.widget.RecyclerView
@@ -17,8 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.cs388_group12_stockpath.Asset
-import com.example.cs388_group12_stockpath.databinding.FragmentHomeBinding
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -62,11 +60,26 @@ class HomeFragment : Fragment() {
         recyclerView = root.findViewById(R.id.recyclerViewAssets)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        //Observe the assets list and update the RecyclerView
+        //getassets
+        //globalUserViewModel.assets.observe(viewLifecycleOwner) { assets ->
+        //val adapter = AssetAdapter(assets)
+        //recyclerView.adapter = adapter
+        //}
+
         globalUserViewModel.assets.observe(viewLifecycleOwner) { assets ->
-            val adapter = AssetAdapter(assets)
-            Log.d("HomeFragment", "Assets list updated: $assets")
+            val adapter = AssetAdapter(assets) { asset ->
+                //orderlist expands to display
+                val intent = Intent(requireContext(), OrderListActivity::class.java)
+                intent.putExtra("asset_sym", asset.sym)
+                startActivity(intent)
+            }
             recyclerView.adapter = adapter
+        }
+
+        //getorders and calculate assets
+        globalUserViewModel.getOrders()
+        globalUserViewModel.orders.observe(viewLifecycleOwner) {
+            globalUserViewModel.calculateAssetsFromOrders()
         }
 //        val dummyAssets = listOf(
 //            Asset(sym = "AAPL", totalQuantity = 10.0, averagePrice = 150.0, currentPrice = 160.0, gainloss = 4.0),
