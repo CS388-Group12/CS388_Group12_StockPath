@@ -189,9 +189,9 @@ In the next spring we will:
 - Notifications and Alerts are pushed to device
 
 
-[Add video/gif of your current application that shows build progress]
-<img src="https://github.com/user-attachments/assets/4224579a-7849-4d8d-a553-0dd7708735b3" width=600>
 
+[*Updated video/gif of your current application that shows build progress]
+<img src="https://github.com/user-attachments/assets/c5dd0182-73fb-4f92-bf97-0af216e4baa0" width=600>
 ## App Demo Video
 
 - Embed the YouTube/Vimeo link of your Completed Demo Day prep video
