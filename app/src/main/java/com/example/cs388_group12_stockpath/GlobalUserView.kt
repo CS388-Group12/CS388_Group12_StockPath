@@ -17,6 +17,8 @@ class GlobalUserView : ViewModel() { //global user data model to be persistant a
 
     val email: LiveData<String?> = _email //?: "Guest@StockPath" as LiveData<String?>
 
+
+
     //Home Fragment Portfolio
     private val stockFuncs = StockFuncs()
     private var _orders = MutableLiveData<MutableList<Order>>(mutableListOf())
@@ -39,6 +41,10 @@ class GlobalUserView : ViewModel() { //global user data model to be persistant a
         }
         Log.d("GlobalUserView", "Current user: ${user.value}")
         updateUserdata()
+    }
+
+    fun getUserEmail(): String {
+        return email.value ?: "Guest@StockPath"
     }
 
     private fun updateUserdata(){
@@ -127,32 +133,34 @@ fun putOrder(order: Order) {
 
     //Assets derrived from orders
     fun calculateAssetsFromOrders() {
-    val ordersList = _orders.value ?: return
-    val assetsMap = mutableMapOf<String, Asset>()
+        val ordersList = _orders.value ?: return
+        val assetsMap = mutableMapOf<String, Asset>()
 
-    for (order in ordersList) {
-        val sym = order.sym
-        val asset = assetsMap[sym] ?: Asset(sym, 0.0, 0.0, 0.0, 0.0)
+        for (order in ordersList) {
+            val sym = order.sym
+            val asset = assetsMap[sym] ?: Asset(sym, 0.0, 0.0, 0.0, 0.0)
 
-        //update total quantity and average price
-        if (order.type == "Buy") {
-            val totalCost = asset.totalQuantity * asset.averagePrice + order.qty * order.price
-            asset.totalQuantity += order.qty
-            asset.averagePrice = if (asset.totalQuantity > 0) totalCost / asset.totalQuantity else 0.0
-        } else if (order.type == "Sell") {
-            asset.totalQuantity -= order.qty
-            if (asset.totalQuantity < 0) asset.totalQuantity = 0.0 //positive quantities
+            //update total quantity and average price
+            if (order.type == "Buy") {
+                val totalCost = asset.totalQuantity * asset.averagePrice + order.qty * order.price
+                asset.totalQuantity += order.qty
+                asset.averagePrice = if (asset.totalQuantity > 0) totalCost / asset.totalQuantity else 0.0
+            } else if (order.type == "Sell") {
+                asset.totalQuantity -= order.qty
+                if (asset.totalQuantity < 0) asset.totalQuantity = 0.0 //positive quantities
+            }
+
+            asset.orderCount += 1
+
+            //updated asset back to the map
+            assetsMap[sym] = asset
         }
 
-        asset.orderCount += 1
-
-        //updated asset back to the map
-        assetsMap[sym] = asset
+        //update asset list
+        _assets.value = assetsMap.values.toMutableList()
     }
 
-    //update asset list
-    _assets.value = assetsMap.values.toMutableList()
-}
+
 
 
 }

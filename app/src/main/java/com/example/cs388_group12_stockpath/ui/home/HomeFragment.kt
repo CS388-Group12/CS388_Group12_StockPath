@@ -53,6 +53,13 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireContext(), AddOrderActivity::class.java)
             startActivity(intent)
         }
+        //Add alert
+        val buttonAddAlert: Button = binding.buttonAddAlert
+        buttonAddAlert.setOnClickListener {
+            Log.d("HomeFragment", "Add Alert button clicked")
+            val intent = Intent(requireContext(), AddAlertActivity::class.java)
+            startActivity(intent)
+        }
         //Alpha Vantage API Section
         val API_KEY = BuildConfig.API_KEY
         Log.d("BuildConfig | AV---->API_KEY", "AV---->API_KEY: " + API_KEY)
