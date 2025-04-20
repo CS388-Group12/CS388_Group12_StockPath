@@ -96,10 +96,13 @@ class HomeFragment : Fragment() {
 //
 //        val adapter = AssetAdapter(dummyAssets)
 //        recyclerView.adapter = adapter
-        //----textview section----
 
-
-        //*********************************************************************
+        // Observe alerts and log them or handle them as needed
+        globalUserViewModel.getAlerts()
+        globalUserViewModel.alerts.observe(viewLifecycleOwner) { alerts ->
+            Log.d("HomeFragment", "Fetched alerts: $alerts")
+        //display alerts in a RecyclerView/ui
+}
 
         return root
     }

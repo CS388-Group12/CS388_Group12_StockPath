@@ -1,6 +1,7 @@
 package com.example.cs388_group12_stockpath.ui.home
 import android.content.Intent
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
@@ -77,23 +78,33 @@ class AddAlertActivity : AppCompatActivity() {
             val selectedAsset = selectedAssetTextView.text.toString()
             val price = priceEditText.text.toString().toDoubleOrNull()
             val isAbove = aboveRadioButton.isChecked
-
+        
             if (selectedAsset.isNotEmpty() && price != null) {
-                val orderType = if (isAbove) "above" else "below"
+                val watchType = if (isAbove) "above" else "below"
                 val alert = Alert(
                     sym = selectedAsset,
-                    price = price,
-                    type = watchType,
+                    watchPrice = price,
+                    currentPrice = 0.0, //Placeholder for live price
+                    watchType = watchType,
                     uid = globalUserView.uid.value ?: "Guest",
-                    aid = Alert.newOID(),
+                    aid = System.currentTimeMillis().toString(), //Unique ID for the alert
                     timestamp = com.google.firebase.Timestamp.now()
                 )
-
-                // Upload order to Firestore
-                globalUserView.putOrder(alert)
-
-                Toast.makeText(this, "Order Submitted: $selectedAsset, $price, $qty, $orderType", Toast.LENGTH_LONG).show()
-                finish()
+        
+                // Upload alert to Firestore
+                val uid = globalUserView.uid.value ?: return@setOnClickListener
+                val db = FirebaseFirestore.getInstance()
+                val alertsRef = db.collection("Users").document(uid).collection("Alerts")
+        
+                alertsRef.document(alert.aid).set(alert)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Alert Created: $selectedAsset at $price ($watchType)", Toast.LENGTH_LONG).show()
+                        finish()
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("AddAlertActivity", "Error creating alert", exception)
+                        Toast.makeText(this, "Failed to create alert", Toast.LENGTH_SHORT).show()
+                    }
             } else {
                 Toast.makeText(this, "Missing required fields", Toast.LENGTH_SHORT).show()
             }

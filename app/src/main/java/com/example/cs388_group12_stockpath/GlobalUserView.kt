@@ -25,6 +25,8 @@ class GlobalUserView : ViewModel() { //global user data model to be persistant a
     var orders: LiveData<MutableList<Order>> = _orders
     private var _assets = MutableLiveData<MutableList<Asset>>(mutableListOf())
     var assets: LiveData<MutableList<Asset>> = _assets
+    private var _alerts = MutableLiveData<MutableList<Alert>>(mutableListOf())
+    val alerts: LiveData<MutableList<Alert>> = _alerts
 
     init {
         getUser()
@@ -64,38 +66,38 @@ class GlobalUserView : ViewModel() { //global user data model to be persistant a
 
     //Orders
     fun getOrders() {
-    val uid = _uid.value ?: return
-    val db = FirebaseFirestore.getInstance()
-    val ordersRef = db.collection("Users").document(uid).collection("Orders")
+        val uid = _uid.value ?: return
+        val db = FirebaseFirestore.getInstance()
+        val ordersRef = db.collection("Users").document(uid).collection("Orders")
 
-//    ordersRef.get()
-//        .addOnSuccessListener { documents ->
-//            val ordersList = mutableListOf<Order>()
-//            for (document in documents) {
-//                val order = document.toObject(Order::class.java)
-//                ordersList.add(order)
-//            }
-//            _orders.value = ordersList
-//            Log.d("GlobalUserView", "Fetched orders: $ordersList")
-//        }
-//        .addOnFailureListener { exception ->
-//            Log.e("GlobalUserView", "Error fetching orders", exception)
-//        }
-    ordersRef.addSnapshotListener { snapshots, e ->
-        if (e != null) {
-            Log.e("GlobalUserView", "Error listening for orders", e)
-            return@addSnapshotListener
-        }
+    //    ordersRef.get()
+    //        .addOnSuccessListener { documents ->
+    //            val ordersList = mutableListOf<Order>()
+    //            for (document in documents) {
+    //                val order = document.toObject(Order::class.java)
+    //                ordersList.add(order)
+    //            }
+    //            _orders.value = ordersList
+    //            Log.d("GlobalUserView", "Fetched orders: $ordersList")
+    //        }
+    //        .addOnFailureListener { exception ->
+    //            Log.e("GlobalUserView", "Error fetching orders", exception)
+    //        }
+        ordersRef.addSnapshotListener { snapshots, e ->
+            if (e != null) {
+                Log.e("GlobalUserView", "Error listening for orders", e)
+                return@addSnapshotListener
+            }
 
-        val ordersList = mutableListOf<Order>()
-        for (document in snapshots!!) {
-            val order = document.toObject(Order::class.java)
-            ordersList.add(order)
+            val ordersList = mutableListOf<Order>()
+            for (document in snapshots!!) {
+                val order = document.toObject(Order::class.java)
+                ordersList.add(order)
+            }
+            _orders.value = ordersList
+            Log.d("GlobalUserView", "Real-time fetched orders: $ordersList")
         }
-        _orders.value = ordersList
-        Log.d("GlobalUserView", "Real-time fetched orders: $ordersList")
     }
-}
 
 fun putOrder(order: Order) {
     val uid = _uid.value ?: return
@@ -158,6 +160,27 @@ fun putOrder(order: Order) {
 
         //update asset list
         _assets.value = assetsMap.values.toMutableList()
+    }
+
+    fun getAlerts() {
+        val uid = _uid.value ?: return
+        val db = FirebaseFirestore.getInstance()
+        val alertsRef = db.collection("Users").document(uid).collection("Alerts")
+    
+        alertsRef.addSnapshotListener { snapshots, e ->
+            if (e != null) {
+                Log.e("GlobalUserView", "Error listening for alerts", e)
+                return@addSnapshotListener
+            }
+    
+            val alertsList = mutableListOf<Alert>()
+            for (document in snapshots!!) {
+                val alert = document.toObject(Alert::class.java)
+                alertsList.add(alert)
+            }
+            _alerts.value = alertsList
+            Log.d("GlobalUserView", "Real-time fetched alerts: $alertsList")
+        }
     }
 
 
