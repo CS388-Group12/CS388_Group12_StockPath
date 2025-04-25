@@ -1,15 +1,27 @@
 package com.example.cs388_group12_stockpath.ui.alerts
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.cs388_group12_stockpath.GlobalUserView
 import com.example.cs388_group12_stockpath.databinding.FragmentAlertsBinding
+import com.example.cs388_group12_stockpath.ui.home.AddAlertActivity
+import com.example.cs388_group12_stockpath.ui.home.AddOrderActivity
+import com.example.cs388_group12_stockpath.ui.home.AssetAdapter
+import com.example.cs388_group12_stockpath.ui.home.OrderListActivity
 
 class AlertsFragment : Fragment() {
+
+    private val globalUserViewModel: GlobalUserView by activityViewModels()
 
     private var _binding: FragmentAlertsBinding? = null
 
@@ -32,6 +44,38 @@ class AlertsFragment : Fragment() {
         alertsViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+
+        val recyclerView = binding.recyclerViewAlerts
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        //
+        globalUserViewModel.alerts.observe(viewLifecycleOwner) { alerts ->
+            val adapter = AlertAdapter(alerts) { alert ->
+                //expand for detailview
+            }
+            recyclerView.adapter = adapter
+        }
+    
+
+        //get alerts refresh
+        globalUserViewModel.getAlerts()
+
+        //Add order
+        val buttonAddOrder: Button = binding.buttonAddOrder
+        buttonAddOrder.setOnClickListener {
+            Log.d("HomeFragment", "Add Order button clicked")
+            val intent = Intent(requireContext(), AddOrderActivity::class.java)
+            startActivity(intent)
+        }
+        //Add alert
+        val buttonAddAlert: Button = binding.buttonAddAlert
+        buttonAddAlert.setOnClickListener {
+            Log.d("HomeFragment", "Add Alert button clicked")
+            val intent = Intent(requireContext(), AddAlertActivity::class.java)
+            startActivity(intent)
+        }
+
+
         return root
     }
 

@@ -9,7 +9,7 @@ data class Alert(
     val sym: String = "test",
     var watchPrice: Double = 0.0,
     var currentPrice: Double = 0.0,
-    var watchType: String ? = "below" // can be above or below watchprice
+    var watchType: String ? = "below" //watchprice can be above or below
 
 ) {
     //Firestore constructor noargs
