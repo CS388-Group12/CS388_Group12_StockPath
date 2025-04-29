@@ -90,6 +90,8 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation ("com.google.android.gms:play-services-auth:20.6.0")
     implementation ("com.google.firebase:firebase-firestore-ktx")
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 }

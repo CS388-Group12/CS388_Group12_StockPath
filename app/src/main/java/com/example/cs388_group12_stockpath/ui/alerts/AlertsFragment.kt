@@ -16,8 +16,6 @@ import com.example.cs388_group12_stockpath.GlobalUserView
 import com.example.cs388_group12_stockpath.databinding.FragmentAlertsBinding
 import com.example.cs388_group12_stockpath.ui.home.AddAlertActivity
 import com.example.cs388_group12_stockpath.ui.home.AddOrderActivity
-import com.example.cs388_group12_stockpath.ui.home.AssetAdapter
-import com.example.cs388_group12_stockpath.ui.home.OrderListActivity
 
 class AlertsFragment : Fragment() {
 
@@ -50,15 +48,20 @@ class AlertsFragment : Fragment() {
 
         //
         globalUserViewModel.alerts.observe(viewLifecycleOwner) { alerts ->
-            val adapter = AlertAdapter(alerts) { alert ->
+            val adapter = AlertAdapter(alerts, globalUserViewModel.priceCache) { alert ->
                 //expand for detailview
             }
             recyclerView.adapter = adapter
         }
-    
 
-        //get alerts refresh
-        globalUserViewModel.getAlerts()
+        globalUserViewModel.priceCache.observe(viewLifecycleOwner) { updatedPrices: MutableMap<String, Double> ->
+            val adapter = recyclerView.adapter as AlertAdapter
+            adapter.updatePrices(updatedPrices.toMutableMap())
+            Log.d("AlertsFragment", "Prices updated for alerts: $updatedPrices")
+        }
+        
+
+        
 
         //Add order
         val buttonAddOrder: Button = binding.buttonAddOrder
@@ -74,6 +77,9 @@ class AlertsFragment : Fragment() {
             val intent = Intent(requireContext(), AddAlertActivity::class.java)
             startActivity(intent)
         }
+
+        //init getalerts
+        globalUserViewModel.getAlerts()
 
 
         return root

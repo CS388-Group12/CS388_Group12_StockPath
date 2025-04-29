@@ -27,14 +27,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 //        globalUserView.uid.observe(this) {
 //            Log.d("MainActivity", "User ID: $it")
 //        }
 //        globalUserView.email.observe(this) {
 //            Log.d("MainActivity", "Email: $it")
 //        }
-
         val user_email_text: TextView = findViewById(R.id.user_email_text)
         val auth_Button: Button = findViewById(R.id.auth_button)
 
@@ -57,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)

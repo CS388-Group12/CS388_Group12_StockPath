@@ -15,10 +15,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
     //*********************************************************************
@@ -29,6 +33,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
+    private lateinit var assetAdapter: AssetAdapter
     private lateinit var recyclerView: RecyclerView
 
     private val binding get() = _binding!!
@@ -41,6 +46,7 @@ class HomeFragment : Fragment() {
         val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
         val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
@@ -67,27 +73,41 @@ class HomeFragment : Fragment() {
         recyclerView = root.findViewById(R.id.recyclerViewAssets)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        //assetAdapter
+        assetAdapter = AssetAdapter(emptyList(), globalUserViewModel.priceCache) { asset ->
+            val intent = Intent(requireContext(), OrderListActivity::class.java)
+            intent.putExtra("asset_sym", asset.sym)
+            startActivity(intent)
+        }
+        recyclerView.adapter = assetAdapter
+
         //getassets
-        //globalUserViewModel.assets.observe(viewLifecycleOwner) { assets ->
-        //val adapter = AssetAdapter(assets)
-        //recyclerView.adapter = adapter
-        //}
-
+        //get assets and update adapter
         globalUserViewModel.assets.observe(viewLifecycleOwner) { assets ->
-            val adapter = AssetAdapter(assets) { asset ->
-                //orderlist expands to display
-                val intent = Intent(requireContext(), OrderListActivity::class.java)
-                intent.putExtra("asset_sym", asset.sym)
-                startActivity(intent)
+            // val prices = globalUserViewModel.currentPrices.value
+            // assets?.forEach { asset ->
+            //     asset.currentPrice = prices?.get(asset.sym) ?: asset.currentPrice
+            // }
+            if (assets != null) {
+                assetAdapter.updateAssets(assets)
+                Log.d("HomeFragment", "Assets updated: $assets")
+            } else {
+                Log.d("HomeFragment", "Assets: null")
             }
-            recyclerView.adapter = adapter
+            //assetAdapter.updateAssets(assets ?: emptyList())
         }
 
-        //getorders and calculate assets
-        globalUserViewModel.getOrders()
-        globalUserViewModel.orders.observe(viewLifecycleOwner) {
-            globalUserViewModel.calculateAssetsFromOrders()
+        
+        //globalUserViewModel.calculateAssetsFromOrders()
+        
+        globalUserViewModel.assets.observe(viewLifecycleOwner){ updatedPrices ->
+            if (updatedPrices != null) {
+                assetAdapter.updateAssets(updatedPrices)
+            }
+            Log.d("HomeFragment RecyclerView assetadapter", "Assets updated in RecyclerView: $updatedPrices")
         }
+
+        //dummy data for testing
 //        val dummyAssets = listOf(
 //            Asset(sym = "AAPL", totalQuantity = 10.0, averagePrice = 150.0, currentPrice = 160.0, gainloss = 4.0),
 //            Asset(sym = "GOOGL", totalQuantity = 5.0, averagePrice = 2800.0, currentPrice = 160.0, gainloss = 4.0),
@@ -102,7 +122,7 @@ class HomeFragment : Fragment() {
         globalUserViewModel.alerts.observe(viewLifecycleOwner) { alerts ->
             Log.d("HomeFragment", "Fetched alerts: $alerts")
         //display alerts in a RecyclerView/ui
-}
+        }
 
         return root
     }
@@ -110,4 +130,10 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun updatePricesInAdapters(prices: Map<String, Double>) {
+        assetAdapter.updatePrices(prices)
+        Log.d("HomeFragment", "Prices updated in adapter: $prices")
+    }
+
 }

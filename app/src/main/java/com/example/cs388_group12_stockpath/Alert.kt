@@ -5,10 +5,10 @@ import java.util.UUID
 data class Alert(
     val uid: String = "Guest",
     val aid: String = newAID(),
-    val timestamp: Timestamp = Timestamp.now(),
+    val timestamp: Timestamp,
     val sym: String = "test",
     var watchPrice: Double = 0.0,
-    var currentPrice: Double = 0.0,
+    var currentPrice: Double,
     var watchType: String ? = "below" //watchprice can be above or below
 
 ) {
