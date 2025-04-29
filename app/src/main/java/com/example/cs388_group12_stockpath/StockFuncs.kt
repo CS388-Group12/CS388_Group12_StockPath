@@ -135,26 +135,38 @@ class StockFuncs {
         client.get(url, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
                 try {
-                    Log.d("StockFuncs", "API Response for $symbol: ${json.jsonObject}")
-                    val result = json.jsonObject.getJSONObject("chart").getJSONArray("result").getJSONObject(0)
-                    val timestamps = result.getJSONArray("timestamp")
-                    val quotes = result.getJSONObject("indicators").getJSONArray("quote").getJSONObject(0)
+                    val result = json.jsonObject
+                        .getJSONObject("chart")
+                        .getJSONArray("result")
+                        .getJSONObject(0)
+                    val indicators = result.getJSONObject("indicators").getJSONArray("quote").getJSONObject(0)
+    
+                    val opens = indicators.getJSONArray("open")
+                    val highs = indicators.getJSONArray("high")
+                    val lows = indicators.getJSONArray("low")
+                    val closes = indicators.getJSONArray("close")
+    
                     val candlesticks = mutableListOf<Candlestick>()
-                    for (i in 0 until timestamps.length()) {
-                        val timestamp = timestamps.getLong(i)
-                        val open = quotes.getDouble("open")
-                        val high = quotes.getDouble("high")
-                        val low = quotes.getDouble("low")
-                        val close = quotes.getDouble("close")
-                        val volume = quotes.getDouble("volume")
 
-                        val candlestick = Candlestick(timestamp, open, high, low, close, volume)
-                        candlesticks.add(candlestick)
+                    val timestamps = result.getJSONArray("timestamp")
+                    val volumes = indicators.getJSONArray("volume")
+
+                    for (i in 0 until opens.length()) {
+                        val open = opens.optDouble(i, Double.NaN)
+                        val high = highs.optDouble(i, Double.NaN)
+                        val low = lows.optDouble(i, Double.NaN)
+                        val close = closes.optDouble(i, Double.NaN)
+                        val timestamp = timestamps.optLong(i, 0)
+                        val volume = volumes.optDouble(i, Double.NaN)
+
+                        if (!open.isNaN() && !high.isNaN() && !low.isNaN() && !close.isNaN() && timestamp != 0L && !volume.isNaN()) {
+                            candlesticks.add(Candlestick(timestamp, open, high, low, close, volume))
+                        }
                     }
+    
                     onSuccess(candlesticks)
-                } catch (e: Exception) {
-                    Log.e("StockFuncs", "Error parsing current price for $symbol", e)
-                    onError("Error parsing current price for $symbol")
+                } catch (e: JSONException) {
+                    onError("Error parsing historical data: ${e.message}")
                 }
             }
 
