@@ -67,8 +67,8 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
         //Alpha Vantage API Section
-        val API_KEY = BuildConfig.API_KEY
-        Log.d("BuildConfig | AV---->API_KEY", "AV---->API_KEY: " + API_KEY)
+        // val API_KEY = BuildConfig.API_KEY
+        // Log.d("BuildConfig | AV---->API_KEY", "AV---->API_KEY: " + API_KEY)
         //*********************************************************************
         recyclerView = root.findViewById(R.id.recyclerViewAssets)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

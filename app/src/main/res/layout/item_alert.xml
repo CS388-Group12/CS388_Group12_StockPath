@@ -6,46 +6,43 @@
     android:layout_height="wrap_content"
     android:padding="8dp"
     android:layout_marginBottom="8dp"
-    android:background="@android:color/black">
+    android:background="@color/green">
 
-    <!-- Alert Symbol -->
     <TextView
         android:id="@+id/alert_sym"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Alert Symbol"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/alert_price_layout"
         />
-
-    <!-- Alert Watch Type -->
     <TextView
         android:id="@+id/alert_watch_type"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Alert Watch Type Above or Below"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/alert_sym"
         app:layout_constraintEnd_toStartOf="@id/alert_price_layout"
         />
 
-    <!-- Alert Timestamp -->
     <TextView
         android:id="@+id/alert_timestamp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Alert Timestamp DateTime"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/alert_watch_type"
         app:layout_constraintEnd_toStartOf="@id/alert_price_layout"
         />
 
-    <!-- Alert Price Layout -->
     <LinearLayout
         android:id="@+id/alert_price_layout"
         android:layout_width="wrap_content"
@@ -55,23 +52,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Alert Watch Price -->
         <TextView
             android:id="@+id/alert_watch_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Alert Watch Price: $0.0"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
 
-        <!-- Alert Current Price -->
         <TextView
             android:id="@+id/alert_current_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Market Price: $0.0"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

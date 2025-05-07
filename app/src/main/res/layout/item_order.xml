@@ -6,16 +6,16 @@
     android:layout_height="wrap_content"
     android:padding="8dp"
     android:layout_marginBottom="8dp"
-    android:background="@android:color/black">
+    android:background="@color/green">
 
     <TextView
         android:id="@+id/textViewOrderSymbol"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Symbol"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textStyle="bold"
-        android:textSize="16sp"
+        android:textSize="8sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/textViewOrderDetails" />
@@ -25,8 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Details"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:textSize="8sp"
         app:layout_constraintStart_toEndOf="@id/textViewOrderSymbol"
         app:layout_constraintTop_toTopOf="@id/textViewOrderSymbol"
         app:layout_constraintEnd_toEndOf="parent" />

@@ -18,30 +18,40 @@ class StockFuncs {
     //Symbol Search
     fun sym_search(sym: String, onSuccess: (List<String>) -> Unit, onError: (String) -> Unit) {
         val url = "https://query1.finance.yahoo.com/v1/finance/search?q=$sym&count=10&region=US&lang=en-US"
-
+    
         val client = AsyncHttpClient()
         client.get(url, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
                 Log.d("StockFuncs", "Response: ${json.jsonObject}")
-
+    
                 try {
-                    // Parse the JSON response using Gson
-                    val results = json.jsonObject.getJSONArray("bestMatches")
+                    // Parse the JSON response
+                    val results = json.jsonObject.optJSONArray("quotes")
+                    if (results == null || results.length() == 0) {
+                        onError("No matches found for the symbol: $sym")
+                        return
+                    }
+    
                     val symbols = mutableListOf<String>()
-
                     for (i in 0 until results.length()) {
                         val match = results.getJSONObject(i)
-                        val symbol = match.getString("1. symbol") // Adjust key based on API response
-                        symbols.add(symbol)
+                        val symbol = match.optString("symbol", null)
+                        if (symbol != null) {
+                            symbols.add(symbol)
+                        }
                     }
-
-                    onSuccess(symbols)
+    
+                    if (symbols.isEmpty()) {
+                        onError("No valid symbols found for the search query: $sym")
+                    } else {
+                        onSuccess(symbols)
+                    }
                 } catch (e: Exception) {
                     Log.e("StockFuncs", "Error parsing response", e)
-                    onError("Error parsing response")
+                    onError("Error parsing response: ${e.message}")
                 }
             }
-
+    
             override fun onFailure(
                 statusCode: Int,
                 headers: Headers?,

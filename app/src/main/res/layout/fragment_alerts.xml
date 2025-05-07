@@ -10,11 +10,11 @@
         android:id="@+id/text_alerts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -26,35 +26,47 @@
         android:id="@+id/recyclerViewAlerts"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="0dp"
         app:layout_constraintTop_toBottomOf="@id/text_alerts"
-        app:layout_constraintBottom_toTopOf="@id/button_add_order"
+        app:layout_constraintBottom_toTopOf="@id/buttonbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/button_add_order"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_margin="5dp"
-        android:text="+\nOrder"
-        android:textSize="9dp"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@android:color/black"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/buttonbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_add_alert" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewAlerts">
 
-    <Button
-        android:id="@+id/button_add_alert"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_margin="5dp"
-        android:text="+\nAlert"
-        android:textSize="9dp"
-        android:textColor="@android:color/white"
-        android:background="@drawable/circle_shape"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_add_order"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button_add_order"
+                android:layout_width="62dp"
+                android:layout_height="62dp"
+                android:layout_margin="1dp"
+                android:backgroundTint="@color/black"
+                android:text="NEW\nOrder\n+"
+                android:textColor="@color/white"
+                android:textSize="8dp" />
+
+            <Button
+                android:id="@+id/button_add_alert"
+                android:layout_width="62dp"
+                android:layout_height="62dp"
+                android:layout_margin="1dp"
+                android:backgroundTint="@color/black"
+                android:text="NEW\nAlert\n+"
+                android:textColor="@color/white"
+                android:textSize="8dp" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 </androidx.constraintlayout.widget.ConstraintLayout>

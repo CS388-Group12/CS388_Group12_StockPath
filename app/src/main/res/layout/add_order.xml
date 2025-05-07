@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/green"
     android:fitsSystemWindows="true"
     android:theme="@style/Theme.CS388_Group12_StockPath">
 
@@ -64,6 +65,7 @@
         android:layout_height="wrap_content"
         android:hint="Search Asset"
         android:inputType="text"
+        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toStartOf="@+id/buttonSearch"
@@ -99,6 +101,7 @@
         android:layout_height="wrap_content"
         android:text="Selected Asset: None"
         android:textSize="16sp"
+        android:textColor="@color/black"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -112,6 +115,7 @@
         android:layout_height="wrap_content"
         android:hint="Price"
         android:inputType="numberDecimal"
+        android:textColor="@color/blue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewSelectedAsset"
@@ -125,6 +129,7 @@
         android:layout_height="wrap_content"
         android:hint="Quantity"
         android:inputType="numberDecimal"
+        android:textColor="@color/blue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextPrice"
@@ -148,13 +153,17 @@
             android:id="@+id/radioBuy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buy" />
+            android:background="@color/black"
+            android:text="Buy"
+            android:textColor="@color/green" />
 
         <RadioButton
             android:id="@+id/radioSell"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sell" />
+            android:background="@color/black"
+            android:text="Sell"
+            android:textColor="@color/red" />
     </RadioGroup>
 
     <Button

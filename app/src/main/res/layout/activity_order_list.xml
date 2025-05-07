@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     android:fitsSystemWindows="true"
     tools:context=".ui.home.OrderListActivity">
 
@@ -12,6 +13,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -23,7 +25,7 @@
             android:layout_gravity="start"
             android:paddingStart="16dp"
             android:text="StockPath"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="34sp" />
 
         <LinearLayout
@@ -40,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Welcome: Guest"
-                android:textColor="@android:color/black"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:layout_gravity="right" />
 
@@ -48,9 +50,9 @@
                 android:id="@+id/auth_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/green"
                 android:text="Sign In"
-                android:textColor="@android:color/white"
+                android:textColor="@color/white"
                 android:textSize="10sp"
                 android:layout_gravity="right" />
         </LinearLayout>
@@ -59,11 +61,12 @@
         android:id="@+id/text_view_orders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:textSize="10sp"
         android:text="Viewing Orders for Asset"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +85,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:clipToPadding="false"
-        android:padding="8dp"
+        android:padding="0dp"
         tools:listitem="@layout/item_order" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
