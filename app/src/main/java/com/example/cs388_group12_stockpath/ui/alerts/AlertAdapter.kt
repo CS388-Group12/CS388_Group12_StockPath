@@ -1,5 +1,6 @@
 package com.example.cs388_group12_stockpath.ui.alerts
 
+import android.icu.text.SimpleDateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cs388_group12_stockpath.Alert
 import com.example.cs388_group12_stockpath.Asset
 import com.example.cs388_group12_stockpath.R
+import com.google.firebase.Timestamp
+import java.util.Locale
 
 class AlertAdapter(
     private var alerts: List<Alert>,
@@ -35,9 +38,33 @@ class AlertAdapter(
             watchPriceTextView.text = "Watch Price: ${alert.watchPrice}"
             watchTypeTextView.text = "Type: ${alert.watchType}"
             alertCurrentPriceTextView.text = "Market Price: ${alert.currentPrice}"
-            alertTimestampTextView.text = "Alert Timestamp: ${alert.timestamp}"
+            val formattedTimestamp = formatTimestamp(alert.timestamp)
+            alertTimestampTextView.text = "Alert Timestamp: $formattedTimestamp"
+
+            // Change background color based on trigger
+            val isTriggered = isAlertTriggered(alert)
+            val backgroundColor = if (isTriggered) {
+                itemView.context.getColor(R.color.red) // Triggered: Red
+            } else {
+                itemView.context.getColor(R.color.blue) // Not Triggered: Blue
+            }
+            itemView.setBackgroundColor(backgroundColor)
 
             itemView.setOnClickListener { onClick(alert) }
+        }
+        private fun formatTimestamp(timestamp: Timestamp): String {
+            val date = timestamp.toDate()
+            val format = SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault())
+            return format.format(date)
+        }
+        
+        private fun isAlertTriggered(alert: Alert): Boolean {
+            return if (alert.watchType == "above") {
+                alert.currentPrice > alert.watchPrice
+            } else {
+                alert.currentPrice < alert.watchPrice
+            }
+        
         }
     }
 

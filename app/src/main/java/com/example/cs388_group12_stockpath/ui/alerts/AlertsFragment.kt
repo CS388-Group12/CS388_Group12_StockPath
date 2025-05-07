@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -49,7 +50,8 @@ class AlertsFragment : Fragment() {
         //
         globalUserViewModel.alerts.observe(viewLifecycleOwner) { alerts ->
             val adapter = AlertAdapter(alerts, globalUserViewModel.priceCache) { alert ->
-                //expand for detailview
+                // Handle alert click (e.g., expand for detail view)
+                Toast.makeText(requireContext(), "Clicked on alert for ${alert.sym}", Toast.LENGTH_SHORT).show()
             }
             recyclerView.adapter = adapter
         }
@@ -59,9 +61,6 @@ class AlertsFragment : Fragment() {
             adapter.updatePrices(updatedPrices.toMutableMap())
             Log.d("AlertsFragment", "Prices updated for alerts: $updatedPrices")
         }
-        
-
-        
 
         //Add order
         val buttonAddOrder: Button = binding.buttonAddOrder

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:layout_marginBottom="8dp"
-    android:background="@color/green">
+    android:layout_marginBottom="8dp">
 
     <TextView
         android:id="@+id/alert_sym"
@@ -17,8 +16,8 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/alert_price_layout"
-        />
+        app:layout_constraintEnd_toStartOf="@id/alert_price_layout" />
+
     <TextView
         android:id="@+id/alert_watch_type"
         android:layout_width="0dp"
@@ -28,8 +27,7 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/alert_sym"
-        app:layout_constraintEnd_toStartOf="@id/alert_price_layout"
-        />
+        app:layout_constraintEnd_toStartOf="@id/alert_price_layout" />
 
     <TextView
         android:id="@+id/alert_timestamp"
@@ -40,8 +38,7 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/alert_watch_type"
-        app:layout_constraintEnd_toStartOf="@id/alert_price_layout"
-        />
+        app:layout_constraintEnd_toStartOf="@id/alert_price_layout" />
 
     <LinearLayout
         android:id="@+id/alert_price_layout"

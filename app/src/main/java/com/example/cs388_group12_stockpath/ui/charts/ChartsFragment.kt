@@ -1,7 +1,14 @@
 package com.example.cs388_group12_stockpath.ui.charts
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.view.GestureDetector
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -24,7 +31,7 @@ import com.example.cs388_group12_stockpath.databinding.FragmentChartsBinding
 import com.example.cs388_group12_stockpath.ui.home.AssetAdapter
 import com.example.cs388_group12_stockpath.GlobalUserView
 
-class ChartsFragment : Fragment() {
+class ChartsFragment : Fragment(), SensorEventListener {
 
     private var _binding: FragmentChartsBinding? = null
     private val binding get() = _binding!!
@@ -38,9 +45,14 @@ class ChartsFragment : Fragment() {
     private val globalUserViewModel: GlobalUserView by activityViewModels()
     private lateinit var assetAdapter: AssetAdapter
 
-    private var selectedInterval: String = "1d" // Default interval
-    private var selectedRange: String = "1mo"  // Default range
+    private var selectedInterval: String = "1m" // Default interval
+    private var selectedRange: String = "1d"  // Default range
     private var currentlySelectedSymbol: String? = null // Track the currently selected symbol
+
+    private lateinit var sensorManager: SensorManager
+    private var accelerometer: Sensor? = null
+    private var gestureDetector: GestureDetector? = null
+    private var isLongPressActive = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,8 +83,8 @@ class ChartsFragment : Fragment() {
 
         // Set up time interval buttons
         root.findViewById<Button>(R.id.button_1d).setOnClickListener { updateInterval("1d", "1mo") }
-        root.findViewById<Button>(R.id.button_1w).setOnClickListener { updateInterval("1d", "1wk") }
-        root.findViewById<Button>(R.id.button_1m).setOnClickListener { updateInterval("1d", "1mo") }
+        root.findViewById<Button>(R.id.button_1w).setOnClickListener { updateInterval("1d", "3mo") }
+        root.findViewById<Button>(R.id.button_1m).setOnClickListener { updateInterval("1m", "1d") }
         root.findViewById<Button>(R.id.button_1y).setOnClickListener { updateInterval("1wk", "1y") }
 
         val recyclerView: RecyclerView = binding.recyclerViewAssets
@@ -98,7 +110,70 @@ class ChartsFragment : Fragment() {
             }
         }
 
+        // Initialize GestureDetector
+        gestureDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
+            override fun onLongPress(e: MotionEvent) {
+                super.onLongPress(e)
+                isLongPressActive = true
+                Toast.makeText(requireContext(), "Tilt to change interval", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        // Set touch listener on the chart
+        candlestickChart.setOnTouchListener { _, event ->
+            gestureDetector?.onTouchEvent(event)
+            if (event.action == MotionEvent.ACTION_UP) {
+                isLongPressActive = false
+            }
+            true
+        }
+
+        // Initialize SensorManager
+        sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        accelerometer?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(this)
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (isLongPressActive && event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
+            val x = event.values[0]
+            val y = event.values[1]
+
+            if (x > 7) {
+                updateInterval("1d", "1mo") // Tilt left
+                Toast.makeText(requireContext(), "Interval: 1 Day", Toast.LENGTH_SHORT).show()
+                isLongPressActive = false
+            } else if (x < -7) {
+                updateInterval("1wk", "1y") // Tilt right
+                Toast.makeText(requireContext(), "Interval: 1 Week", Toast.LENGTH_SHORT).show()
+                isLongPressActive = false
+            } else if (y > 7) {
+                updateInterval("1m", "1d") // Tilt up
+                Toast.makeText(requireContext(), "Interval: 1 Minute", Toast.LENGTH_SHORT).show()
+                isLongPressActive = false
+            } else if (y < -7) {
+                updateInterval("1d", "3mo") // Tilt down
+                Toast.makeText(requireContext(), "Interval: 3 Months", Toast.LENGTH_SHORT).show()
+                isLongPressActive = false
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // No implementation needed
     }
 
     private fun updateInterval(interval: String, range: String) {

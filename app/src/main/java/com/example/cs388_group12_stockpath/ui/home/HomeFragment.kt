@@ -73,6 +73,8 @@ class HomeFragment : Fragment() {
         recyclerView = root.findViewById(R.id.recyclerViewAssets)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        
+
         //assetAdapter
         assetAdapter = AssetAdapter(emptyList(), globalUserViewModel.priceCache) { asset ->
             val intent = Intent(requireContext(), OrderListActivity::class.java)

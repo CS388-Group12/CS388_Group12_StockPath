@@ -192,6 +192,55 @@ class StockFuncs {
             })
     }
 
+    fun fetchNews(
+    sym: String,
+    onSuccess: (List<NewsItem>) -> Unit,
+    onError: (String) -> Unit
+    ) {
+        val url = "https://query1.finance.yahoo.com/v1/finance/search?q=$sym&count=10&region=US&lang=en-US"
+
+        val client = AsyncHttpClient()
+        client.get(url, object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
+                Log.d("StockFuncs", "Response: ${json.jsonObject}")
+
+                try {
+                    // Parse the JSON response for news
+                    val newsArray = json.jsonObject.optJSONArray("news")
+                    val newsItems = mutableListOf<NewsItem>()
+                    if (newsArray != null) {
+                        for (i in 0 until newsArray.length()) {
+                            val newsObject = newsArray.getJSONObject(i)
+                            val title = newsObject.optString("title", "No Title")
+                            val link = newsObject.optString("link", "")
+                            val publisher = newsObject.optString("publisher", "Unknown Publisher")
+                            newsItems.add(NewsItem(title, link, publisher))
+                        }
+                    }
+
+                    if (newsItems.isEmpty()) {
+                        onError("No news found for the symbol: $sym")
+                    } else {
+                        onSuccess(newsItems)
+                    }
+                } catch (e: Exception) {
+                    Log.e("StockFuncs", "Error parsing response", e)
+                    onError("Error parsing response: ${e.message}")
+                }
+            }
+
+            override fun onFailure(
+                statusCode: Int,
+                headers: Headers?,
+                responseString: String?,
+                throwable: Throwable?
+            ) {
+                Log.e("StockFuncs", "Request failed: $responseString", throwable)
+                onError("Request failed: $responseString")
+            }
+        })
+    }
+
     //GetNews
     // fun get_news(
     //     symbol: String,
