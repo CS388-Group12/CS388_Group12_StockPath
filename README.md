@@ -179,20 +179,41 @@ StockPath, the stock portfolio management tool is ourtop app idea because it wou
 - User can click on Asset and view orders associated
 - User can set alerts for Assets
 - Users can retrieve price data for current market value
-  
-## List any pending user stories / any user stories you decided to cut
-from the original requirements
-In the next spring we will:
+
 - Implement the Chart api to display the financial data for each Asset
 - Incorporate the gyroscope sensor for viewing charts at different intervals and zooms.
 - Integrate Google Gemini to summarize and provide relevant news articles for the users Portfolio.
 - Notifications and Alerts are pushed to device
+  
+## List any pending user stories / any user stories you decided to cut
+from the original requirements 
+- Gemini Sentiment Analysis from news
 
+
+<img width="1111" alt="Screenshot 2025-05-07 at 12 40 20 PM" src="https://github.com/user-attachments/assets/04a71275-0b75-4073-9e3a-77ef8f340880" />
+<img src="https://github.com/user-attachments/assets/c5dd0182-73fb-4f92-bf97-0af216e4baa0" width=600>
 
 
 [*Updated video/gif of your current application that shows build progress]
-<img src="https://github.com/user-attachments/assets/c5dd0182-73fb-4f92-bf97-0af216e4baa0" width=600>
+
+##PART 1
+![StockPath_Demo-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/c10ded5d-1b32-4033-bd7a-3d2baeee1c87)
+
+##PART 2
+![StockPath_Demo-ezgif com-video-to-gif-converter (2)](https://github.com/user-attachments/assets/fcdcc71b-ef32-412d-bfb2-53e3484eff04)
+
+##PART 3
+![StockPath_Demo-ezgif com-video-to-gif-converter (3)](https://github.com/user-attachments/assets/15fc5095-dc99-413b-88b1-1b1e278148ed)
+
+
 ## App Demo Video
 
 - Embed the YouTube/Vimeo link of your Completed Demo Day prep video
-- 
+  ## StockPathFull Demo
+
+[Click here to watch the full demo](https://drive.google.com/file/d/1P3nOqG_mfe3jIVQzx7dQCF4CDDXNaJY_/preview)
+
+## Project Slideshow
+
+[View our project presentation on Google Slides](https://docs.google.com/presentation/d/1GdZA1lSW_m8D3gH8SwQimmWXbJy_0zDlIwZrv_RHmI8/edit?usp=sharing)
+
