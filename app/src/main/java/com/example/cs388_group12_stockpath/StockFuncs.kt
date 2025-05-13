@@ -10,7 +10,7 @@ import okhttp3.Headers
 import org.json.JSONException
 
 class StockFuncs {
-    private val API_KEY = BuildConfig.API_KEY
+    //private val API_KEY = BuildConfig.API_KEY
     private val priceCache = mutableMapOf<String, Pair<Double, Long>>()
     private val updatingSymbols = mutableSetOf<String>()
     private var updateInterval: Long = 60000 
